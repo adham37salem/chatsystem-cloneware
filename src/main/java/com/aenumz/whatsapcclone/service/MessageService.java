@@ -7,10 +7,15 @@ import com.aenumz.whatsapcclone.model.entity.Message;
 import com.aenumz.whatsapcclone.model.entity.MessageState;
 import com.aenumz.whatsapcclone.model.entity.MessageType;
 import com.aenumz.whatsapcclone.model.mapper.MessageMapper;
+import com.aenumz.whatsapcclone.notification.Notification;
+import com.aenumz.whatsapcclone.notification.NotificationService;
+import com.aenumz.whatsapcclone.notification.NotificationType;
 import com.aenumz.whatsapcclone.repository.ChatRepository;
 import com.aenumz.whatsapcclone.repository.MessageRepository;
+import com.aenumz.whatsapcclone.util.FileUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,7 @@ public class MessageService {
     private final ChatRepository chatRepository;
     private final MessageMapper messageMapper;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
     public void saveMessage(MessageRequest request) {
         Chat chat = this.chatRepository
@@ -40,7 +46,19 @@ public class MessageService {
                 .state(MessageState.SENT)
                 .build();
         this.messageRepository.save(newMessage);
-        // todo notification system
+
+        Notification notification = Notification
+                .builder()
+                .chatId(chat.getId())
+                .messageType(request.getType())
+                .content(request.getContent())
+                .senderId(request.getSenderId())
+                .receiverId(request.getRecipientId())
+                .type(NotificationType.MESSAGE)
+                .chatName(chat.getChatName(request.getSenderId()))
+                .build();
+        notificationService.sendNotification(newMessage.getRecipientId(), notification);
+
     }
 
     public List<MessageResponse> findChatMessages(String chatId) {
@@ -58,7 +76,14 @@ public class MessageService {
         final String recipientId = this.getRecipientId(authentication, chat);
         this.messageRepository.setMessagesToSeenByChatId(chatId, MessageState.SEEN);
 
-        // todo notification system
+        Notification notification = Notification
+                .builder()
+                .chatId(chat.getId())
+                .type(NotificationType.SEEN)
+                .receiverId(recipientId)
+                .senderId(getSenderId(chat, authentication))
+                .build();
+        this.notificationService.sendNotification(recipientId, notification);
     }
 
     private String getRecipientId(Authentication authentication, Chat chat) {
@@ -83,7 +108,18 @@ public class MessageService {
                 .mediaFilePath(filePath)
                 .build();
         this.messageRepository.save(message);
-        // todo notification system
+
+        Notification notification = Notification
+                .builder()
+                .chatId(chat.getId())
+                .type(NotificationType.IMAGE)
+                .messageType(MessageType.IMAGE)
+                .senderId(senderId)
+                .receiverId(recipientId)
+                .content(message.getContent())
+                .media(FileUtil.readFileFromLocation(filePath))
+                .build();
+        this.notificationService.sendNotification(recipientId, notification);
 
     }
 
