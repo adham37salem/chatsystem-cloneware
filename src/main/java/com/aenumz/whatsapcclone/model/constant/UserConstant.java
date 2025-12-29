@@ -1,11 +1,9 @@
 package com.aenumz.whatsapcclone.model.constant;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserConstant {
     public static final String FIND_USER_BY_EMAIL = "Users.findUserByEmail";

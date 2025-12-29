@@ -1,18 +1,26 @@
 package com.aenumz.whatsapcclone.model.entity;
 
-import com.aenumz.whatsapcclone.common.BaseAuditingEntity;
-import com.aenumz.whatsapcclone.model.constant.UserConstant;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.aenumz.whatsapcclone.common.BaseAuditingEntity;
+import com.aenumz.whatsapcclone.model.constant.UserConstant;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 @Data
-@Builder
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

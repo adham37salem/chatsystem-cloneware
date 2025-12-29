@@ -1,15 +1,17 @@
 package com.aenumz.whatsapcclone.model.mapper;
 
-import com.aenumz.whatsapcclone.model.dto.user.UserResponse;
-import com.aenumz.whatsapcclone.model.entity.User;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
+import com.aenumz.whatsapcclone.model.dto.user.UserResponse;
+import com.aenumz.whatsapcclone.model.entity.User;
+
 @Service
 public class UserMapper {
+    @NonNull
     public User fromTokenAttributes(Map<String, Object> attributes) {
         User user = new User();
         if (attributes.containsKey("sub")) {

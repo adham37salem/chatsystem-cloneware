@@ -1,13 +1,13 @@
 package com.aenumz.whatsapcclone.model.mapper;
 
+import org.springframework.stereotype.Service;
+
 import com.aenumz.whatsapcclone.model.dto.message.MessageResponse;
 import com.aenumz.whatsapcclone.model.entity.Message;
 import com.aenumz.whatsapcclone.util.FileUtil;
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @Data

@@ -1,5 +1,13 @@
 package com.aenumz.whatsapcclone.service;
 
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.aenumz.whatsapcclone.model.dto.message.MessageRequest;
 import com.aenumz.whatsapcclone.model.dto.message.MessageResponse;
 import com.aenumz.whatsapcclone.model.entity.Chat;
@@ -13,15 +21,9 @@ import com.aenumz.whatsapcclone.notification.NotificationType;
 import com.aenumz.whatsapcclone.repository.ChatRepository;
 import com.aenumz.whatsapcclone.repository.MessageRepository;
 import com.aenumz.whatsapcclone.util.FileUtil;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class MessageService {
 
     public void saveMessage(MessageRequest request) {
         Chat chat = this.chatRepository
-                .findById(request.getChatId())
+                .findById(Objects.requireNonNull(request.getChatId()))
                 .orElseThrow(() -> new EntityNotFoundException("Chat not found"));
         Message newMessage = Message
                 .builder()
@@ -45,7 +47,7 @@ public class MessageService {
                 .type(request.getType())
                 .state(MessageState.SENT)
                 .build();
-        this.messageRepository.save(newMessage);
+        this.messageRepository.save(Objects.requireNonNull(newMessage));
 
         Notification notification = Notification
                 .builder()
@@ -57,12 +59,12 @@ public class MessageService {
                 .type(NotificationType.MESSAGE)
                 .chatName(chat.getChatName(request.getSenderId()))
                 .build();
-        notificationService.sendNotification(newMessage.getRecipientId(), notification);
+        notificationService.sendNotification(Objects.requireNonNull(newMessage.getRecipientId()), Objects.requireNonNull(notification));
 
     }
 
     public List<MessageResponse> findChatMessages(String chatId) {
-        return this.messageRepository.findMessagesByChatId(chatId)
+        return this.messageRepository.findMessagesByChatId(Objects.requireNonNull(chatId))
                 .stream()
                 .map(this.messageMapper::toMessageResponse)
                 .toList();
@@ -71,10 +73,10 @@ public class MessageService {
     @Transactional
     public void setMessagesToSeen(Authentication authentication, String chatId) {
         Chat chat = this.chatRepository
-                .findById(chatId)
+                .findById(Objects.requireNonNull(chatId))
                 .orElseThrow(() -> new EntityNotFoundException("Chat not found"));
         final String recipientId = this.getRecipientId(authentication, chat);
-        this.messageRepository.setMessagesToSeenByChatId(chatId, MessageState.SEEN);
+        this.messageRepository.setMessagesToSeenByChatId(Objects.requireNonNull(chatId), MessageState.SEEN);
 
         Notification notification = Notification
                 .builder()
@@ -83,7 +85,7 @@ public class MessageService {
                 .receiverId(recipientId)
                 .senderId(getSenderId(chat, authentication))
                 .build();
-        this.notificationService.sendNotification(recipientId, notification);
+        this.notificationService.sendNotification(Objects.requireNonNull(recipientId), Objects.requireNonNull(notification));
     }
 
     private String getRecipientId(Authentication authentication, Chat chat) {
@@ -94,7 +96,7 @@ public class MessageService {
     }
 
     public void uploadMediaMessage(String chatId, MultipartFile file, Authentication authentication) {
-        Chat chat = this.chatRepository.findById(chatId)
+        Chat chat = this.chatRepository.findById(Objects.requireNonNull(chatId))
                 .orElseThrow(() -> new EntityNotFoundException("Chat Not Found"));
         final String senderId = this.getSenderId(chat, authentication);
         final String recipientId = this.getRecipientId(authentication, chat);
@@ -107,7 +109,7 @@ public class MessageService {
                 .state(MessageState.SENT)
                 .mediaFilePath(filePath)
                 .build();
-        this.messageRepository.save(message);
+        this.messageRepository.save(Objects.requireNonNull(message));
 
         Notification notification = Notification
                 .builder()
@@ -119,7 +121,7 @@ public class MessageService {
                 .content(message.getContent())
                 .media(FileUtil.readFileFromLocation(filePath))
                 .build();
-        this.notificationService.sendNotification(recipientId, notification);
+        this.notificationService.sendNotification(Objects.requireNonNull(recipientId), Objects.requireNonNull(notification));
 
     }
 

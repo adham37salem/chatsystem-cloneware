@@ -1,16 +1,17 @@
 package com.aenumz.whatsapcclone.interceptor;
 
-import com.aenumz.whatsapcclone.model.entity.User;
-import com.aenumz.whatsapcclone.model.mapper.UserMapper;
-import com.aenumz.whatsapcclone.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import com.aenumz.whatsapcclone.model.entity.User;
+import com.aenumz.whatsapcclone.model.mapper.UserMapper;
+import com.aenumz.whatsapcclone.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor

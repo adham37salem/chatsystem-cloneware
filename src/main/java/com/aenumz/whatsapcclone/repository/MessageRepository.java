@@ -1,17 +1,15 @@
 package com.aenumz.whatsapcclone.repository;
 
-import com.aenumz.whatsapcclone.model.constant.MessageConstant;
-import com.aenumz.whatsapcclone.model.dto.message.MessageResponse;
-import com.aenumz.whatsapcclone.model.entity.Chat;
-import com.aenumz.whatsapcclone.model.entity.Message;
-import com.aenumz.whatsapcclone.model.entity.MessageState;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.aenumz.whatsapcclone.model.constant.MessageConstant;
+import com.aenumz.whatsapcclone.model.entity.Message;
+import com.aenumz.whatsapcclone.model.entity.MessageState;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {

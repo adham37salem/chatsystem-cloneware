@@ -1,13 +1,12 @@
 package com.aenumz.whatsapcclone.util;
 
-import io.micrometer.common.util.StringUtils;
-import jakarta.validation.Path;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
+
+import io.micrometer.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FileUtil {
@@ -19,8 +18,8 @@ public class FileUtil {
             return new byte[0];
         }
         try {
-            Path file = (Path) new File(fileUrl).toPath();
-            return Files.readAllBytes((java.nio.file.Path) file);
+            Path file = new File(fileUrl).toPath();
+            return Files.readAllBytes(file);
 
         } catch (IOException e) {
             log.warn("There is no file found in this path {}", fileUrl);

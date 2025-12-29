@@ -1,19 +1,19 @@
 package com.aenumz.whatsapcclone.service;
 
-import jakarta.validation.Path;
-import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import static java.lang.System.currentTimeMillis;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static java.lang.System.currentTimeMillis;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -39,9 +39,9 @@ public class FileService {
         }
         final String fileExtension = this.getFileExtension(sourceFile.getOriginalFilename());
         String targetFilePath = finalUploadPath + File.separator + currentTimeMillis() + fileExtension;
-        Path targetPath = (Path) Paths.get(targetFilePath);
+        Path targetPath = Paths.get(targetFilePath);
         try {
-            Files.write((java.nio.file.Path) targetPath, sourceFile.getBytes());
+            Files.write(targetPath, sourceFile.getBytes());
             log.info("File saved successfully to {}.", targetFilePath);
             return targetFilePath;
         } catch (IOException e) {
