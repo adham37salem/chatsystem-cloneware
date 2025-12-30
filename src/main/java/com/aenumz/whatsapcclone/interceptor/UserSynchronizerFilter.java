@@ -14,8 +14,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserSynchronizerFilter extends OncePerRequestFilter {
     private final UserSynchronizer userSynchronizer;
     @Override
@@ -24,5 +26,8 @@ public class UserSynchronizerFilter extends OncePerRequestFilter {
             JwtAuthenticationToken token = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             this.userSynchronizer.syncWithIdentityProvider(token.getToken());
         }
+        
+        log.info("User synchronized with identity provider");
+        filterChain.doFilter(request, response);
     }
 }

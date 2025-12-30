@@ -32,3 +32,5 @@ application:
 
 server:
   port: 8000
+springdoc:
+  default-produces-media-type: application/json
