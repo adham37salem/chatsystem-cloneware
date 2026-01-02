@@ -31,7 +31,7 @@ public class UserMapper {
         if (attributes.containsKey("email")) {
             user.setEmail(attributes.get("email").toString());
         }
-        user.setLastName(LocalDateTime.now().toString());
+        user.setLastSeen(LocalDateTime.now());
         return user;
     }
 
