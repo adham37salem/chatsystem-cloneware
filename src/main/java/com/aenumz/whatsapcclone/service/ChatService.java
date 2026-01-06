@@ -1,19 +1,21 @@
 package com.aenumz.whatsapcclone.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.aenumz.whatsapcclone.model.dto.chat.ChatResponse;
 import com.aenumz.whatsapcclone.model.entity.Chat;
 import com.aenumz.whatsapcclone.model.entity.User;
 import com.aenumz.whatsapcclone.model.mapper.ChatMapper;
 import com.aenumz.whatsapcclone.repository.ChatRepository;
 import com.aenumz.whatsapcclone.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class ChatService {
 
     public String createChat(String senderId, String recipientId) {
         Optional<Chat> existingChat = this.chatRepository.findChatBySenderIdAndReceiver(senderId, recipientId);
-        if (existingChat.isEmpty()) {
+        if (existingChat.isPresent() && !existingChat.get().getMessages().isEmpty()) {
             return existingChat.get().getId();
         }
 
