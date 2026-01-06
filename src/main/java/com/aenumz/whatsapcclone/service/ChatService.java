@@ -35,13 +35,13 @@ public class ChatService {
 
     public String createChat(String senderId, String recipientId) {
         Optional<Chat> existingChat = this.chatRepository.findChatBySenderIdAndReceiver(senderId, recipientId);
-        if (existingChat.isPresent() && !existingChat.get().getMessages().isEmpty()) {
+        if (existingChat.isPresent()) {
             return existingChat.get().getId();
         }
 
         User sender = this.userRepository.findUserByPublicId(senderId)
                 .orElseThrow(() -> new EntityNotFoundException("User with Id " + senderId + " not found"));
-        User recipient = this.userRepository.findUserByPublicId(senderId)
+        User recipient = this.userRepository.findUserByPublicId(recipientId)
                 .orElseThrow(() -> new EntityNotFoundException("User with Id " + recipientId + " not found"));
 
         Chat chat = new Chat();
